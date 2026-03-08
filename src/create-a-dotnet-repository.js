@@ -1,72 +1,143 @@
-import { Request, Response, NextFunction } from 'express';
-import { Repository } from '@/models/repository';
-import { AppSettings } from '@/config/appsettings';
-import { GenericExceptionMiddleware } from '@/middleware/genericExceptionMiddleware';
+csharp
+// File: Services/RepositoryService.cs
 
-export class DotnetRepositoryService {
-  private repositories: Repository[] = [];
+using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-  constructor(private appSettings: AppSettings) {}
-
-  public getAllRepositories(req: Request, res: Response, next: NextFunction): void {
-    try {
-      res.status(200).json(this.repositories);
-    } catch (error) {
-      next(new GenericExceptionMiddleware(error));
+namespace Services
+{
+    public class RepositoryServiceOptions
+    {
+        public string ConnectionString { get; set; }
     }
-  }
 
-  public getRepositoryById(req: Request, res: Response, next: NextFunction): void {
-    try {
-      const id = req.params.id;
-      const repository = this.repositories.find(repo => repo.id === id);
-      if (!repository) {
-        res.status(404).send('Repository not found');
-      } else {
-        res.status(200).json(repository);
-      }
-    } catch (error) {
-      next(new GenericExceptionMiddleware(error));
+    public interface IRepositoryService<T>
+    {
+        Task<IEnumerable<T>> GetAllAsync();
+        Task<T> GetByIdAsync(Guid id);
+        Task AddAsync(T entity);
+        Task UpdateAsync(T entity);
+        Task DeleteAsync(Guid id);
     }
-  }
 
-  public createRepository(req: Request, res: Response, next: NextFunction): void {
-    try {
-      const newRepository: Repository = req.body;
-      this.repositories.push(newRepository);
-      res.status(201).json(newRepository);
-    } catch (error) {
-      next(new GenericExceptionMiddleware(error));
-    }
-  }
+    public class RepositoryService<T> : IRepositoryService<T>
+    {
+        private readonly RepositoryServiceOptions _options;
 
-  public updateRepository(req: Request, res: Response, next: NextFunction): void {
-    try {
-      const id = req.params.id;
-      const repositoryIndex = this.repositories.findIndex(repo => repo.id === id);
-      if (repositoryIndex === -1) {
-        res.status(404).send('Repository not found');
-      } else {
-        this.repositories[repositoryIndex] = req.body;
-        res.status(200).json(this.repositories[repositoryIndex]);
-      }
-    } catch (error) {
-      next(new GenericExceptionMiddleware(error));
-    }
-  }
+        public RepositoryService(IOptions<RepositoryServiceOptions> options)
+        {
+            _options = options.Value ?? throw new ArgumentNullException(nameof(options));
+        }
 
-  public deleteRepository(req: Request, res: Response, next: NextFunction): void {
-    try {
-      const id = req.params.id;
-      const repositoryIndex = this.repositories.findIndex(repo => repo.id === id);
-      if (repositoryIndex === -1) {
-        res.status(404).send('Repository not found');
-      } else {
-        this.repositories.splice(repositoryIndex, 1);
-        res.status(204).send();
-      }
-    } catch (error) {
-      next(new GenericExceptionMiddleware(error));
+        public async Task<IEnumerable<T>> GetAllAsync()
+        {
+            // Simulate data retrieval
+            await Task.Delay(100); // Simulate async operation
+            return new List<T>(); // Return an empty list for demonstration
+        }
+
+        public async Task<T> GetByIdAsync(Guid id)
+        {
+            // Simulate data retrieval
+            await Task.Delay(100); // Simulate async operation
+            return default(T); // Return default value for demonstration
+        }
+
+        public async Task AddAsync(T entity)
+        {
+            // Simulate data addition
+            await Task.Delay(100); // Simulate async operation
+        }
+
+        public async Task UpdateAsync(T entity)
+        {
+            // Simulate data update
+            await Task.Delay(100); // Simulate async operation
+        }
+
+        public async Task DeleteAsync(Guid id)
+        {
+            // Simulate data deletion
+            await Task.Delay(100); // Simulate async operation
+        }
     }
+}
+
+// File: Middleware/ExceptionHandlingMiddleware.cs
+
+using Microsoft.AspNetCore.Http;
+using System;
+using System.Net;
+using System.Threading.Tasks;
+
+namespace Middleware
+{
+    public class ExceptionHandlingMiddleware
+    {
+        private readonly RequestDelegate _next;
+
+        public ExceptionHandlingMiddleware(RequestDelegate next)
+        {
+            _next = next;
+        }
+
+        public async Task InvokeAsync(HttpContext context)
+        {
+            try
+            {
+                await _next(context);
+            }
+            catch (Exception ex)
+            {
+                await HandleExceptionAsync(context, ex);
+            }
+        }
+
+        private static Task HandleExceptionAsync(HttpContext context, Exception exception)
+        {
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+            var result = new { message = exception.Message };
+            return context.Response.WriteAsJsonAsync(result);
+        }
+    }
+}
+
+// File: Program.cs
+
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Configuration;
+using Services;
+using Middleware;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Configure services
+builder.Services.Configure<RepositoryServiceOptions>(
+    builder.Configuration.GetSection("RepositoryService"));
+
+builder.Services.AddScoped(typeof(IRepositoryService<>), typeof(RepositoryService<>));
+
+var app = builder.Build();
+
+// Configure middleware
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+// Configure endpoints
+app.MapGet("/", () => "Hello World!");
+
+app.Run();
+
+on
+// File: appsettings.json
+
+{
+  "RepositoryService": {
+    "ConnectionString": "YourConnectionStringHere"
   }
 }
