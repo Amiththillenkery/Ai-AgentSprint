@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ImplementArticleEntitiy.Domain\ImplementArticleEntitiy.Domain.csproj" />
+    <ProjectReference Include="..\ImplementArticleEntity.Domain\ImplementArticleEntity.Domain.csproj" />
   </ItemGroup>
 
 </Project>
