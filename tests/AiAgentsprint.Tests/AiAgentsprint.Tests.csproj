@@ -17,8 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\CreateADotnetRepositoryWithCleanArchitecture.Api\CreateADotnetRepositoryWithCleanArchitecture.Api.csproj" />
-    <ProjectReference Include="..\..\src\CreateADotnetRepositoryWithCleanArchitecture.Application\CreateADotnetRepositoryWithCleanArchitecture.Application.csproj" />
+    <ProjectReference Include="..\AiAgentsprint.Api\AiAgentsprint.Api.csproj" />
+    <ProjectReference Include="..\AiAgentsprint.Application\AiAgentsprint.Application.csproj" />
   </ItemGroup>
 
 </Project>
