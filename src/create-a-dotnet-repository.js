@@ -5,69 +5,68 @@ import { GenericExceptionMiddleware } from '@/middleware/genericExceptionMiddlew
 
 export class DotnetRepositoryService {
   private repositories: Repository[] = [];
-  private appSettings: AppSettings;
 
-  constructor(appSettings: AppSettings) {
-    this.appSettings = appSettings;
-  }
+  constructor(private appSettings: AppSettings) {}
 
-  public async createRepository(req: Request, res: Response, next: NextFunction): Promise<void> {
+  public getAllRepositories(req: Request, res: Response, next: NextFunction): void {
     try {
-      const { name, description } = req.body;
-      const newRepo: Repository = { id: this.generateId(), name, description };
-      this.repositories.push(newRepo);
-      res.status(201).json(newRepo);
+      res.status(200).json(this.repositories);
     } catch (error) {
-      next(new GenericExceptionMiddleware('Error creating repository', error));
+      next(new GenericExceptionMiddleware(error));
     }
   }
 
-  public async getRepository(req: Request, res: Response, next: NextFunction): Promise<void> {
+  public getRepositoryById(req: Request, res: Response, next: NextFunction): void {
     try {
-      const { id } = req.params;
-      const repo = this.repositories.find(r => r.id === id);
-      if (!repo) {
-        res.status(404).json({ message: 'Repository not found' });
-        return;
+      const id = req.params.id;
+      const repository = this.repositories.find(repo => repo.id === id);
+      if (!repository) {
+        res.status(404).send('Repository not found');
+      } else {
+        res.status(200).json(repository);
       }
-      res.status(200).json(repo);
     } catch (error) {
-      next(new GenericExceptionMiddleware('Error retrieving repository', error));
+      next(new GenericExceptionMiddleware(error));
     }
   }
 
-  public async updateRepository(req: Request, res: Response, next: NextFunction): Promise<void> {
+  public createRepository(req: Request, res: Response, next: NextFunction): void {
     try {
-      const { id } = req.params;
-      const { name, description } = req.body;
-      const repoIndex = this.repositories.findIndex(r => r.id === id);
-      if (repoIndex === -1) {
-        res.status(404).json({ message: 'Repository not found' });
-        return;
-      }
-      this.repositories[repoIndex] = { ...this.repositories[repoIndex], name, description };
-      res.status(200).json(this.repositories[repoIndex]);
+      const newRepository: Repository = req.body;
+      this.repositories.push(newRepository);
+      res.status(201).json(newRepository);
     } catch (error) {
-      next(new GenericExceptionMiddleware('Error updating repository', error));
+      next(new GenericExceptionMiddleware(error));
     }
   }
 
-  public async deleteRepository(req: Request, res: Response, next: NextFunction): Promise<void> {
+  public updateRepository(req: Request, res: Response, next: NextFunction): void {
     try {
-      const { id } = req.params;
-      const repoIndex = this.repositories.findIndex(r => r.id === id);
-      if (repoIndex === -1) {
-        res.status(404).json({ message: 'Repository not found' });
-        return;
+      const id = req.params.id;
+      const repositoryIndex = this.repositories.findIndex(repo => repo.id === id);
+      if (repositoryIndex === -1) {
+        res.status(404).send('Repository not found');
+      } else {
+        this.repositories[repositoryIndex] = req.body;
+        res.status(200).json(this.repositories[repositoryIndex]);
       }
-      this.repositories.splice(repoIndex, 1);
-      res.status(204).send();
     } catch (error) {
-      next(new GenericExceptionMiddleware('Error deleting repository', error));
+      next(new GenericExceptionMiddleware(error));
     }
   }
 
-  private generateId(): string {
-    return Math.random().toString(36).substr(2, 9);
+  public deleteRepository(req: Request, res: Response, next: NextFunction): void {
+    try {
+      const id = req.params.id;
+      const repositoryIndex = this.repositories.findIndex(repo => repo.id === id);
+      if (repositoryIndex === -1) {
+        res.status(404).send('Repository not found');
+      } else {
+        this.repositories.splice(repositoryIndex, 1);
+        res.status(204).send();
+      }
+    } catch (error) {
+      next(new GenericExceptionMiddleware(error));
+    }
   }
 }
