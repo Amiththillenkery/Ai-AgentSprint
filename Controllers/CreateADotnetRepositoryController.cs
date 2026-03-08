@@ -1,6 +1,6 @@
 csharp
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -54,17 +54,19 @@ namespace Controllers
             {
                 return NotFound();
             }
-            return Ok(updatedRepository);
+
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRepository(int id, CancellationToken cancellationToken)
         {
-            var result = await _repositoryService.DeleteRepositoryAsync(id, cancellationToken);
-            if (!result)
+            var success = await _repositoryService.DeleteRepositoryAsync(id, cancellationToken);
+            if (!success)
             {
                 return NotFound();
             }
+
             return NoContent();
         }
     }
