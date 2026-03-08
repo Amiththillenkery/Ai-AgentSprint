@@ -12,9 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\StructureTheCurrentRepositoryWithAddingSolut.Domain\StructureTheCurrentRepositoryWithAddingSolut.Domain.csproj" />
-    <ProjectReference Include="..\StructureTheCurrentRepositoryWithAddingSolut.Application\StructureTheCurrentRepositoryWithAddingSolut.Application.csproj" />
-    <ProjectReference Include="..\StructureTheCurrentRepositoryWithAddingSolut.Infrastructure\StructureTheCurrentRepositoryWithAddingSolut.Infrastructure.csproj" />
+    <ProjectReference Include="..\ImplementArticleEntity.Domain\ImplementArticleEntity.Domain.csproj" />
+    <ProjectReference Include="..\ImplementArticleEntity.Application\ImplementArticleEntity.Application.csproj" />
+    <ProjectReference Include="..\ImplementArticleEntity.Infrastructure\ImplementArticleEntity.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
