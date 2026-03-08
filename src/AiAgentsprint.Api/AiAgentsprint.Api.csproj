@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.4" />
+    <PackageReference Include="Serilog.AspNetCore" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\StructureTheCurrentRepositoryWithAddingSolut.Domain\StructureTheCurrentRepositoryWithAddingSolut.Domain.csproj" />
+    <ProjectReference Include="..\StructureTheCurrentRepositoryWithAddingSolut.Application\StructureTheCurrentRepositoryWithAddingSolut.Application.csproj" />
+    <ProjectReference Include="..\StructureTheCurrentRepositoryWithAddingSolut.Infrastructure\StructureTheCurrentRepositoryWithAddingSolut.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
