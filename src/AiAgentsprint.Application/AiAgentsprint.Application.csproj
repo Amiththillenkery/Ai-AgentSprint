@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\StructureTheCurrentRepositoryWithAddingSolut.Domain\StructureTheCurrentRepositoryWithAddingSolut.Domain.csproj" />
+    <ProjectReference Include="..\ImplementArticleEntitiy.Domain\ImplementArticleEntitiy.Domain.csproj" />
   </ItemGroup>
 
 </Project>

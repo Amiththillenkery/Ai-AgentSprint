@@ -4,9 +4,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
-using StructureTheCurrentRepositoryWithAddingSolut.Infrastructure;
-using StructureTheCurrentRepositoryWithAddingSolut.Application;
-using StructureTheCurrentRepositoryWithAddingSolut.Infrastructure.Repositories;
+using ImplementArticleEntity.Infrastructure;
+using ImplementArticleEntity.Application;
+using ImplementArticleEntity.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,12 +14,11 @@ var builder = WebApplication.CreateBuilder(args);
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .Enrich.FromLogContext()
-    .WriteTo.Console()
     .CreateLogger();
 
 builder.Host.UseSerilog();
 
-// Add services to the container
+// Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -35,23 +34,22 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Configure DbContext for SQL Server
+// Configure Entity Framework and Repository
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Register application services
-builder.Services.AddApplicationServices();
-builder.Services.AddInfrastructureServices();
-
-// Register repositories
 builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
 
-// Add health checks
+// Configure application services
+builder.Services.AddApplicationServices();
+builder.Services.AddInfrastructureServices(builder.Configuration);
+
+// Configure Health Checks
 builder.Services.AddHealthChecks();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline
+// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
@@ -60,23 +58,28 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
-    app.UseExceptionHandler("/error");
+    app.UseExceptionHandler("/Error");
     app.UseHsts();
 }
 
-app.UseSerilogRequestLogging();
-
 app.UseHttpsRedirection();
+app.UseStaticFiles();
+
 app.UseRouting();
 
 app.UseCors("AllowAll");
 
 app.UseAuthorization();
 
+app.UseSerilogRequestLogging();
+
 // Global exception handling middleware
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
-app.MapControllers();
-app.MapHealthChecks("/health");
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+    endpoints.MapHealthChecks("/health");
+});
 
 app.Run();

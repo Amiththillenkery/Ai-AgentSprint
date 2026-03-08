@@ -1,11 +1,13 @@
+using System;
 using System.Net;
 using System.Text.Json;
+using System.Threading.Tasks;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using StructureTheCurrentRepositoryWithAddingSolut.Api.Middleware;
+using Microsoft.AspNetCore.Mvc;
 
-namespace StructureTheCurrentRepositoryWithAddingSolut.Api.Middleware
+namespace ImplementArticleEntitiy.Api.Middleware
 {
     public class GlobalExceptionMiddleware
     {
@@ -18,27 +20,27 @@ namespace StructureTheCurrentRepositoryWithAddingSolut.Api.Middleware
             _logger = logger;
         }
 
-        public async Task InvokeAsync(HttpContext context)
+        public async Task InvokeAsync(HttpContext httpContext)
         {
             try
             {
-                await _next(context);
+                await _next(httpContext);
             }
             catch (Exception ex)
             {
-                await HandleExceptionAsync(context, ex);
+                _logger.LogError(ex, "An unhandled exception has occurred.");
+                await HandleExceptionAsync(httpContext, ex);
             }
         }
 
-        private async Task HandleExceptionAsync(HttpContext context, Exception exception)
+        private Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             context.Response.ContentType = "application/json";
+
             var correlationId = context.TraceIdentifier;
             var problemDetails = new ProblemDetails
             {
                 Instance = context.Request.Path,
-                Status = (int)HttpStatusCode.InternalServerError,
-                Title = "An unexpected error occurred!",
                 Detail = exception.Message,
                 Extensions = { ["correlationId"] = correlationId }
             };
@@ -46,29 +48,33 @@ namespace StructureTheCurrentRepositoryWithAddingSolut.Api.Middleware
             switch (exception)
             {
                 case ValidationException validationException:
-                    problemDetails.Status = (int)HttpStatusCode.BadRequest;
+                    context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                     problemDetails.Title = "Validation error";
-                    problemDetails.Detail = validationException.Message;
+                    problemDetails.Status = context.Response.StatusCode;
+                    problemDetails.Extensions["errors"] = validationException.Errors;
                     break;
 
                 case NotFoundException:
-                    problemDetails.Status = (int)HttpStatusCode.NotFound;
+                    context.Response.StatusCode = (int)HttpStatusCode.NotFound;
                     problemDetails.Title = "Resource not found";
+                    problemDetails.Status = context.Response.StatusCode;
                     break;
 
                 case UnauthorizedAccessException:
-                    problemDetails.Status = (int)HttpStatusCode.Unauthorized;
+                    context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                     problemDetails.Title = "Unauthorized access";
+                    problemDetails.Status = context.Response.StatusCode;
                     break;
 
                 default:
-                    _logger.LogError(exception, "Unhandled exception occurred.");
+                    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                    problemDetails.Title = "An unexpected error occurred";
+                    problemDetails.Status = context.Response.StatusCode;
                     break;
             }
 
-            context.Response.StatusCode = problemDetails.Status.Value;
-            var jsonResponse = JsonSerializer.Serialize(problemDetails);
-            await context.Response.WriteAsync(jsonResponse);
+            var result = JsonSerializer.Serialize(problemDetails);
+            return context.Response.WriteAsync(result);
         }
     }
 }
