@@ -7,28 +7,27 @@ namespace Models
     {
         [Required]
         [StringLength(100, MinimumLength = 3)]
-        public string RepositoryName { get; set; }
+        public string RepositoryName { get; set; } = string.Empty;
 
+        [Required]
         [StringLength(500)]
-        public string? Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         [Required]
         [Url]
-        public string RepositoryUrl { get; set; }
+        public string RepositoryUrl { get; set; } = string.Empty;
 
         [Required]
-        [EmailAddress]
-        public string OwnerEmail { get; set; }
+        public bool IsPrivate { get; set; }
 
-        [Range(1, int.MaxValue)]
-        public int? MaxContributors { get; set; }
+        public CreateADotnetRepositoryDto() { }
     }
 
     public class UpdateDotnetRepositoryDto
     {
         [Required]
         [StringLength(100, MinimumLength = 3)]
-        public string RepositoryName { get; set; }
+        public string RepositoryName { get; set; } = string.Empty;
 
         [StringLength(500)]
         public string? Description { get; set; }
@@ -36,10 +35,8 @@ namespace Models
         [Url]
         public string? RepositoryUrl { get; set; }
 
-        [EmailAddress]
-        public string? OwnerEmail { get; set; }
+        public bool? IsPrivate { get; set; }
 
-        [Range(1, int.MaxValue)]
-        public int? MaxContributors { get; set; }
+        public UpdateDotnetRepositoryDto() { }
     }
 }
