@@ -1,0 +1,45 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateADotnetRepository.Api", "src\CreateADotnetRepository.Api\CreateADotnetRepository.Api.csproj", "{GUID-API-PROJECT}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateADotnetRepository.Domain", "src\CreateADotnetRepository.Domain\CreateADotnetRepository.Domain.csproj", "{GUID-DOMAIN-PROJECT}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateADotnetRepository.Application", "src\CreateADotnetRepository.Application\CreateADotnetRepository.Application.csproj", "{GUID-APPLICATION-PROJECT}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateADotnetRepository.Infrastructure", "src\CreateADotnetRepository.Infrastructure\CreateADotnetRepository.Infrastructure.csproj", "{GUID-INFRASTRUCTURE-PROJECT}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateADotnetRepository.Tests", "tests\CreateADotnetRepository.Tests\CreateADotnetRepository.Tests.csproj", "{GUID-TESTS-PROJECT}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{GUID-API-PROJECT}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{GUID-API-PROJECT}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{GUID-API-PROJECT}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{GUID-API-PROJECT}.Release|Any CPU.Build.0 = Release|Any CPU
+		{GUID-DOMAIN-PROJECT}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{GUID-DOMAIN-PROJECT}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{GUID-DOMAIN-PROJECT}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{GUID-DOMAIN-PROJECT}.Release|Any CPU.Build.0 = Release|Any CPU
+		{GUID-APPLICATION-PROJECT}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{GUID-APPLICATION-PROJECT}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{GUID-APPLICATION-PROJECT}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{GUID-APPLICATION-PROJECT}.Release|Any CPU.Build.0 = Release|Any CPU
+		{GUID-INFRASTRUCTURE-PROJECT}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{GUID-INFRASTRUCTURE-PROJECT}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{GUID-INFRASTRUCTURE-PROJECT}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{GUID-INFRASTRUCTURE-PROJECT}.Release|Any CPU.Build.0 = Release|Any CPU
+		{GUID-TESTS-PROJECT}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{GUID-TESTS-PROJECT}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{GUID-TESTS-PROJECT}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{GUID-TESTS-PROJECT}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
