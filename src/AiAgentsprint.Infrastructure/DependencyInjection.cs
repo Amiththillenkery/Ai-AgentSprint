@@ -1,9 +1,9 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using StructureTheCurrentRepositoryWithAddingSolut.Infrastructure.Repositories;
+using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
+using ImplementArticleEntitiy.Infrastructure.Repositories;
 
-namespace StructureTheCurrentRepositoryWithAddingSolut.Infrastructure
+namespace ImplementArticleEntitiy.Infrastructure
 {
     public static class DependencyInjection
     {
@@ -19,11 +19,11 @@ namespace StructureTheCurrentRepositoryWithAddingSolut.Infrastructure
     }
 }
 
-namespace StructureTheCurrentRepositoryWithAddingSolut.Infrastructure.Repositories
+namespace ImplementArticleEntitiy.Infrastructure.Repositories
 {
     public interface IArticleRepository
     {
-        // Define repository methods
+        // Define CRUD operations
     }
 
     public class ArticleRepository : IArticleRepository
@@ -35,18 +35,33 @@ namespace StructureTheCurrentRepositoryWithAddingSolut.Infrastructure.Repositori
             _context = context;
         }
 
-        // Implement repository methods
+        // Implement CRUD operations
     }
 }
 
-namespace StructureTheCurrentRepositoryWithAddingSolut.Infrastructure
+namespace ImplementArticleEntitiy.Infrastructure
 {
     public class ApplicationDbContext : DbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
-        {
-        }
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
-        // Define DbSets for your entities
+        public DbSet<Article> Articles { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Article>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Title).IsRequired().HasMaxLength(200);
+                entity.Property(e => e.Price).IsRequired().HasColumnType("decimal(18,2)");
+            });
+        }
+    }
+
+    public class Article
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public decimal Price { get; set; }
     }
 }
