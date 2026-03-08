@@ -1,4 +1,4 @@
-namespace StructureTheCurrentRepositoryWithAddingSolut.Application.DTOs
+namespace ImplementArticleEntitiy.Application.DTOs
 {
     public record BaseDto
     {
